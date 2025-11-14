@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import axios from 'axios'
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const location = searchParams.get('location') || ''
@@ -109,7 +109,7 @@ export default function CheckoutPage() {
               <span className="text-2xl font-bold text-gray-900">${totalPrice.toFixed(2)}</span>
             </div>
             <p className="text-xs text-gray-600 mb-4">
-              Payments processed by Stripe. You'll receive your leads instantly after payment.
+              Payments processed by Stripe. You&apos;ll receive your leads instantly after payment.
             </p>
             <button
               type="submit"
@@ -122,6 +122,22 @@ export default function CheckoutPage() {
         </form>
       </div>
     </main>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen px-4 py-8 bg-white">
+          <div className="max-w-2xl mx-auto">
+            <p className="text-gray-600">Loading checkout...</p>
+          </div>
+        </main>
+      }
+    >
+      <CheckoutContent />
+    </Suspense>
   )
 }
 

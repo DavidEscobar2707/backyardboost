@@ -1,6 +1,6 @@
-'use client'
+ 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import axios from 'axios'
 
@@ -25,7 +25,7 @@ interface Lead {
   lead_score: number
 }
 
-export default function ResultsPage() {
+function ResultsContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const location = searchParams.get('location') || ''
@@ -102,7 +102,7 @@ export default function ResultsPage() {
                 <option value={100}>100</option>
               </select>
               <p className="mt-2 text-sm text-gray-600">
-                Leads are property-level, analyzed from aerial imagery and public data. You'll receive CSV + JSON and image links.
+                Leads are property-level, analyzed from aerial imagery and public data. You&apos;ll receive CSV + JSON and image links.
               </p>
             </div>
 
@@ -143,6 +143,22 @@ export default function ResultsPage() {
         )}
       </div>
     </main>
+  )
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen px-4 py-8 bg-white">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-gray-600">Loading backyard leads...</p>
+          </div>
+        </main>
+      }
+    >
+      <ResultsContent />
+    </Suspense>
   )
 }
 

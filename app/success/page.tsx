@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 
-export default function SuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams()
   const location = searchParams.get('location') || ''
   const count = Number(searchParams.get('count')) || 10
@@ -47,7 +47,7 @@ export default function SuccessPage() {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold mb-4 text-gray-900">Your backyard leads are ready</h1>
         <p className="text-lg text-gray-600 mb-8">
-          Download your files below. We've also sent a copy to {email}.
+          Download your files below. We&apos;ve also sent a copy to {email}.
         </p>
 
         <div className="grid gap-4 md:grid-cols-3 mb-8">
@@ -89,10 +89,27 @@ export default function SuccessPage() {
         )}
 
         <div className="mt-8 text-sm text-gray-600">
-          <p>Questions? Reply to the receipt email and we'll help.</p>
+          <p>Questions? Reply to the receipt email and we&apos;ll help.</p>
         </div>
       </div>
     </main>
   )
 }
+
+export default function SuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen px-4 py-8 bg-white">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-gray-600">Loading your backyard leads...</p>
+          </div>
+        </main>
+      }
+    >
+      <SuccessContent />
+    </Suspense>
+  )
+}
+
 
